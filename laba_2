@@ -1,0 +1,135 @@
+//подключаем библиотеки 
+#include <clocale>
+#include <vector>
+#include <iostream>
+#include <string>
+#include <algorithm>
+
+//открываем пространство имён
+using namespace std;
+
+//создаём класс Data
+class Data {
+public:
+	
+	// функция для заполнения данными объекта
+	void SetData() {
+		
+		SetDay();
+		SetMonth();
+		SetYear();
+		id = day + "." + month + "." + year;
+		SetDescription();
+
+	}
+	//функция для предоставления данных объекта
+	void GetData() {
+		cout << day << "." << month << "." << year << '\n' <<
+			"В этот день: \n" << description << endl;
+	}
+
+	//функция для предоставления id
+	string GetId() {
+		return id;
+	}
+
+private:
+	//переменные с настоящим названием
+	string description;
+	string id;
+	string day;
+	string month;
+	string year;
+
+	//функция для установки дня
+	void SetDay() {
+		cout << "Введите день: ";
+		cin >> day;
+	}
+	//функция для установки месяца
+	void SetMonth() {
+		cout << "Введите месяц: ";
+		cin >> month;
+	}
+	//функция для установки года
+	void SetYear() {
+		cout << "Введите год: ";
+		cin >> year;
+	}
+	//фунция для утсановки описания
+	void SetDescription() {
+		cout << "Введите описание этой даты: ";
+		cin.ignore();
+		getline(cin, description);
+	}
+};
+
+//создаём вектор для хранения объектов Data
+vector<Data> dataLibrary;
+
+//метод для поиска объекта в векторе
+void Search() {
+
+	cout << "Введите дату для поиска(через точку): ";
+	string searchData;
+	cin >> searchData;
+	
+
+	bool flag = false;
+	for (int i = 0; i < dataLibrary.size(); i++) {
+
+		if (dataLibrary[i].GetId() == searchData) {
+			dataLibrary[i].GetData();
+			flag = true;
+			break;
+		}
+	}
+	if (!flag) {
+		cout << "Такая дата не зарегистрирована" << endl;
+	}
+
+}
+
+//освновной метод 
+int main() {
+	//настраиваем локаль
+	setlocale(0, "");
+	
+	cout << "Программа сохраняет дату и её описание\n" <<
+		"Чтобы добавить дату, жми(1)\n" <<
+		"Чтобы найти дату, жми(2)\n" << 
+		"Чтобы закрыть программу, жми(0): ";
+
+	//создаём переменную для переключения команд
+	int flag;
+	cin >> flag;
+
+	while (flag != 0) {
+		//создали объект Data
+		Data data;
+		//сделали условное развлетление
+		switch (flag) {
+		case(1):
+			//установили данные
+			data.SetData();
+			//добавили в вектор
+			dataLibrary.push_back(data);
+			break;
+		case(2):
+			//нашли объект и выгрузили его данные
+			Search();
+			break;
+		default:
+			//вывели сообщение об ошибке
+			cout << "Такой команды нет" << endl;
+			break;
+		}
+		//просим ввести номер требуемой нам команды
+		cout << "Выберите команду: ";
+		cin >> flag;
+	}
+	//информируем о выходе из программы
+	cout << "Вы вышли из программы";
+	//возвращаем 0 -> програма выполнилась правильно 
+	return 0;
+}
