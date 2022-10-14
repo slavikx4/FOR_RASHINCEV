@@ -1,135 +1,93 @@
-//подключаем библиотеки 
-#include <clocale>
-#include <vector>
+//подключаем библиотеки
 #include <iostream>
-#include <string>
-#include <algorithm>
+#include <clocale>
 
-//открываем пространство имён
+
 using namespace std;
 
-//создаём класс Data
-class Data {
-public:
-	
-	// функция для заполнения данными объекта
-	void SetData() {
-		
-		SetDay();
-		SetMonth();
-		SetYear();
-		id = day + "." + month + "." + year;
-		SetDescription();
-
-	}
-	//функция для предоставления данных объекта
-	void GetData() {
-		cout << day << "." << month << "." << year << '\n' <<
-			"В этот день: \n" << description << endl;
-	}
-
-	//функция для предоставления id
-	string GetId() {
-		return id;
-	}
-
-private:
-	//переменные с настоящим названием
-	string description;
-	string id;
-	string day;
-	string month;
-	string year;
-
-	//функция для установки дня
-	void SetDay() {
-		cout << "Введите день: ";
-		cin >> day;
-	}
-	//функция для установки месяца
-	void SetMonth() {
-		cout << "Введите месяц: ";
-		cin >> month;
-	}
-	//функция для установки года
-	void SetYear() {
-		cout << "Введите год: ";
-		cin >> year;
-	}
-	//фунция для утсановки описания
-	void SetDescription() {
-		cout << "Введите описание этой даты: ";
-		cin.ignore();
-		getline(cin, description);
-	}
-};
-
-//создаём вектор для хранения объектов Data
-vector<Data> dataLibrary;
-
-//метод для поиска объекта в векторе
-void Search() {
-
-	cout << "Введите дату для поиска(через точку): ";
-	string searchData;
-	cin >> searchData;
-	
-
-	bool flag = false;
-	for (int i = 0; i < dataLibrary.size(); i++) {
-
-		if (dataLibrary[i].GetId() == searchData) {
-			dataLibrary[i].GetData();
-			flag = true;
-			break;
-		}
-	}
-	if (!flag) {
-		cout << "Такая дата не зарегистрирована" << endl;
-	}
-
-}
-
-//освновной метод 
 int main() {
-	//настраиваем локаль
+	//ставим кирилицу
 	setlocale(0, "");
-	
+	//выводим меню программы
 	cout << "Программа сохраняет дату и её описание\n" <<
 		"Чтобы добавить дату, жми(1)\n" <<
-		"Чтобы найти дату, жми(2)\n" << 
-		"Чтобы закрыть программу, жми(0): ";
+		"Чтобы найти дату, жми(2)\n" <<
+		"Чтобы закрыть программу, жми(0)" << endl;
 
-	//создаём переменную для переключения команд
-	int flag;
-	cin >> flag;
+	//вводи массивы для храниения данных
+	char dataLibrary[100][9];
+	char descriptionLibrary[100][255];
+	//переменная для перемещения по массиву
+	int index = 0;
 
-	while (flag != 0) {
-		//создали объект Data
-		Data data;
-		//сделали условное развлетление
-		switch (flag) {
+	//спрашиваем первую команду
+	cout << "Введите команду: ";
+	int i;
+	cin >> i;
+
+	//заволим цикл, чтобы программа использовалась, пока пользователь не захотел выйти
+	while (i != 0) {
+		switch (i) {
 		case(1):
-			//установили данные
-			data.SetData();
-			//добавили в вектор
-			dataLibrary.push_back(data);
+			//устанавливаем дату
+			char data[9];
+			cout << "Установите дату(через точку, например: 12.12.12): ";
+			cin >> data;
+			//добавляем массив в массив
+			memcpy(dataLibrary[index], data, sizeof(data));
+
+			//устанавливаем описание
+			char description[250];
+			cout << "Установите описание(до 255 символов): ";
+			//убираем лишний символ
+			cin.ignore();
+			//считываем строку до знака \n
+			cin.getline(description, 250);
+			memcpy(descriptionLibrary[index], description, sizeof(description));
+
+			// делаем шаг 
+			index++;
+
 			break;
+
 		case(2):
-			//нашли объект и выгрузили его данные
-			Search();
+			{cout << "Введите дату для поиска(через точку, например: 12.12.12): ";
+			char searchData[9];
+			cin >> searchData;
+
+			//переменная для определения результата
+			bool flag = false;
+			//цикл, чтобы проверить была ли зарегитрирована дата
+			for (int i = 0; i < index; i++) {
+				//проверка на раенство строк
+				if (!strcmp(dataLibrary[i], searchData)) {
+
+					cout << "Дата найдена" << endl;
+					//выводим описание даты
+
+					cout << descriptionLibrary[i] << endl;
+					//дата найдена 
+					flag = true;
+					break;
+				}
+			}
+			//если дата была не найдена, то выдаём ошибку
+			if (!flag) {
+				cout << "Ошибка: дата не зарегистрирована" << endl;
+			}
+			}
 			break;
+		//во всех неправильных вводах команды кидаем ошибку
 		default:
-			//вывели сообщение об ошибке
-			cout << "Такой команды нет" << endl;
+			cout << "Ошибка: такой команды нет" << endl;
 			break;
 		}
-		//просим ввести номер требуемой нам команды
-		cout << "Выберите команду: ";
-		cin >> flag;
+		//очередной запрос команды
+		cout << "Введите команду: ";
+		cin >> i;
 	}
-	//информируем о выходе из программы
-	cout << "Вы вышли из программы";
-	//возвращаем 0 -> програма выполнилась правильно 
+
+	cout << "Программа закрылась" << endl;
+	// возращаем 0 -> программа завершилась без нарушений
 	return 0;
 }
