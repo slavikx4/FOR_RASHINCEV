@@ -1,11 +1,15 @@
 //подключаем библиотеки
 #include <iostream>
 #include <clocale>
+#include <windows.h>
 
 
 using namespace std;
 
 int main() {
+
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
 	//ставим кирилицу
 	setlocale(0, "");
 	//выводим меню программы
