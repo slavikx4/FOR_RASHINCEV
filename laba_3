@@ -6,16 +6,16 @@
 using namespace std;
 
 //иетод для вывода данных
-void Output(double array[10]) {
-	for (int i = 0; i < 10; i++) {
+void Output(int size, double *array) {
+	for (int i = 0; i < size; i++) {
 		cout << array[i] << '\t';
 	}
 }
 
 //метод для поиска и\одинаковых элементов и их замены на 0
-void search(int k, double array[10]) {
+void search(int k, int size, double *array) {
 	//массиы хранящий индексы повторяющхся элементов
-	int array_index[10];
+	int *array_index = new int[size];
 	//счётчик повторяющихся элемнтов
 	int counter = 0;
 	//очередной элемент для сравнения
@@ -23,17 +23,17 @@ void search(int k, double array[10]) {
 
 	//цикл для прохода по всему массиву входных данных
 
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < size; i++) {
 		number = array[i];
 		//скидываем счётчик на ноль
 		counter = 0;
 		//очищаем массив идексов
-		for (int g = 0; g < 10; g++) {
+		for (int g = 0; g < size; g++) {
 			array_index[g] = 0;
 		}
 
 		//цикл для проверки "есть ли дальше повторяющиеся элементы"
-		for (int j = i; j < 10; j++) {
+		for (int j = i; j < size; j++) {
 
 			// если элемент совпал
 			if (array[j] == number) {
@@ -46,7 +46,7 @@ void search(int k, double array[10]) {
 		//если повторяющихся чисел больше заданого числа
 		if (counter > k) {
 			//проходим по массиву индексов для очередного array[i]
-			for (int m = 0; m < 10; m++) {
+			for (int m = 0; m < size; m++) {
 				//если значение элемента == 1 -Ю на этом месте стоит повторяющееся число
 				if (array_index[m] == 1) {
 					// меняем это повторяющееся число на 0
@@ -56,18 +56,21 @@ void search(int k, double array[10]) {
 		}
 	}
 	//вызываем фунцию для вывода массива
-	Output(array);
+	Output(size, array);
 }
 
 
 int main() {
 	//устанавливаем локаль
 	setlocale(LC_ALL, "");
+	cout << "Введите размер массива: ";
+	int size;
+	cin >> size;
 
-	cout << "Введите 10 чисел: ";
-	double array[10];
+	cout << "Введите " << size << " чисел: ";
+	double *array = new double[size];
 	//инициализируем массив входных данных
-	for (int i = 0; i < 10; i++) {
+	for (int i = 0; i < size; i++) {
 		cin >> array[i];
 	}
 	cout << "Введите число к: ";
@@ -75,7 +78,7 @@ int main() {
 	cin >> k;
 
 	//передаём в фунцию аргументы
-	search(k, array);
+	search(k, size,  array);
 
 	//возращаем 0 -> программа завершилась коректно
 	return 0;
