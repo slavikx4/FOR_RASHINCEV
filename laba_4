@@ -1,0 +1,31 @@
+//подключили библиотеки 
+#include <iostream>
+#include <typeinfo>
+#include <fstream>
+
+//используем пространство имён
+using namespace std;
+
+// функция каста любого числа в строку
+char* toString(double& number) {
+
+	char* stringNumber = new char(); // выделяем памятьпод строку 
+	ofstream ofile("number.txt"); // открываем файл для записи
+	ofile << number; // вводим число
+	ofile.close(); // закрываем файл
+	ifstream ifile("number.txt");// открываем файл для чтения
+	ifile >> stringNumber; // читаем файл
+	ifile.close();// закрываем файл
+
+	return stringNumber;//возвращаем указатель на строку
+}
+
+//основная функция
+int main() {
+	
+	double number; cin >> number; //вводим число
+	char* stroka = toString(number); //инициализация строки
+	cout << stroka << '\t' << typeid(stroka).name();//вывод строки и её тип
+
+	return 0;//вернули 0 -> всё хорошо
+}
