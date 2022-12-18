@@ -1,31 +1,32 @@
 //подключили библиотеки 
 #include <iostream>
 #include <typeinfo>
-#include <fstream>
+#include <stdio.h>
 
+
+#pragma warning (disable:4996);
 //используем пространство имён
 using namespace std;
 
 // функция каста любого числа в строку
 char* toString(double& number) {
+	
+	char* chararray = new char[100];
 
-	char* stringNumber = new char(); // выделяем памятьпод строку 
-	ofstream ofile("number.txt"); // открываем файл для записи
-	ofile << number; // вводим число
-	ofile.close(); // закрываем файл
-	ifstream ifile("number.txt");// открываем файл для чтения
-	ifile >> stringNumber; // читаем файл
-	ifile.close();// закрываем файл
+	sprintf(chararray, "%g", number);
 
-	return stringNumber;//возвращаем указатель на строку
+	return chararray;//возвращаем указатель на строку
 }
 
 //основная функция
 int main() {
-	
+
 	double number; cin >> number; //вводим число
-	char* stroka = toString(number); //инициализация строки
-	cout << stroka << '\t' << typeid(stroka).name();//вывод строки и её тип
+	char* stroka =  (toString(number)); //инициализация строки
+
+	cout << stroka << '\t'<< typeid(stroka).name();//вывод строки и её тип
+
+	delete[] stroka; // удаляем указатель на массив
 
 	return 0;//вернули 0 -> всё хорошо
 }
